@@ -13,17 +13,16 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
-import com.mongodb.WriteResult;
 
-@WebServlet("/AddTrain")
-public class AddTrain extends HttpServlet{
 
+@WebServlet("/UpdateTrain")
+public class UpdateTrain extends HttpServlet{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private MongoClient client;
-	public AddTrain() {
+	public UpdateTrain() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -41,7 +40,7 @@ public class AddTrain extends HttpServlet{
 		String to = req.getParameter("to");
 		
 		BasicDBObject document = new BasicDBObject();
-		document.put("train", train);
+		document.put("name", train);
 		document.put("from", from);
 		document.put("to", to);
 		
@@ -51,16 +50,8 @@ public class AddTrain extends HttpServlet{
 		DB db=client.getDB(uri.getDatabase());
 		DBCollection trains=db.getCollection("firstcollection");
 		
-		WriteResult result=trains.insert(document);
+		trains.update(new BasicDBObject().append("train", train), document);
 		
-		resp.setHeader("Access-Control-Allow-Origin", "*");
-		resp.setHeader("Access-Control-Allow-Methods", "POST");
-		resp.setHeader("Access-Control-Allow-Headers", "Content-Type");
-		resp.setHeader("Access-Control-Max-Age", "86400");
-
-		resp.getWriter().write(result.toString());
-		
-//		resp.sendRedirect("AddTrain.html");
 		}
 		catch(Exception e){
 			e.printStackTrace();

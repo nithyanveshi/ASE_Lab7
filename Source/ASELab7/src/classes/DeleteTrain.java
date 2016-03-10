@@ -15,15 +15,14 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.WriteResult;
 
-@WebServlet("/AddTrain")
-public class AddTrain extends HttpServlet{
-
+@WebServlet("/DeleteTrain")
+public class DeleteTrain extends HttpServlet{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private MongoClient client;
-	public AddTrain() {
+	public DeleteTrain() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -37,13 +36,9 @@ public class AddTrain extends HttpServlet{
 		// TODO Auto-generated method stub
 		try{
 		String train = req.getParameter("name");
-		String from = req.getParameter("from");
-		String to = req.getParameter("to");
 		
 		BasicDBObject document = new BasicDBObject();
 		document.put("train", train);
-		document.put("from", from);
-		document.put("to", to);
 		
 		MongoClientURI uri=new MongoClientURI("mongodb://raparthiss:haiboss117@ds019268.mlab.com:19268/aselab7db");
 		client = new MongoClient(uri);
@@ -51,7 +46,7 @@ public class AddTrain extends HttpServlet{
 		DB db=client.getDB(uri.getDatabase());
 		DBCollection trains=db.getCollection("firstcollection");
 		
-		WriteResult result=trains.insert(document);
+		WriteResult result=trains.remove(document);
 		
 		resp.setHeader("Access-Control-Allow-Origin", "*");
 		resp.setHeader("Access-Control-Allow-Methods", "POST");
@@ -59,8 +54,6 @@ public class AddTrain extends HttpServlet{
 		resp.setHeader("Access-Control-Max-Age", "86400");
 
 		resp.getWriter().write(result.toString());
-		
-//		resp.sendRedirect("AddTrain.html");
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -69,5 +62,6 @@ public class AddTrain extends HttpServlet{
 		{
 			client.close();
 		}
+		
 	}
 }
